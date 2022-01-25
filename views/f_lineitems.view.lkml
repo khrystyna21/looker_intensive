@@ -18,12 +18,14 @@ view: f_lineitems {
     label: "Commit Date Key"
     type: number
     sql: ${TABLE}."L_COMMITDATEKEY" ;;
+    hidden: yes
   }
 
   dimension: l_custkey {
     label: "Customer Key"
     type: number
     sql: ${TABLE}."L_CUSTKEY" ;;
+    hidden: yes
   }
 
   dimension: l_discount {
@@ -48,12 +50,14 @@ view: f_lineitems {
     label: "Order Date Key"
     type: number
     sql: ${TABLE}."L_ORDERDATEKEY" ;;
+    hidden: yes
   }
 
   dimension: l_orderkey {
     label: "Order Key"
     type: number
     sql: ${TABLE}."L_ORDERKEY" ;;
+    hidden: yes
   }
 
   dimension: l_orderpriority {
@@ -72,6 +76,7 @@ view: f_lineitems {
     label: "Part Key"
     type: number
     sql: ${TABLE}."L_PARTKEY" ;;
+    hidden: yes
   }
 
   dimension: l_quantity {
@@ -84,6 +89,7 @@ view: f_lineitems {
     label: "Receipt Date Key"
     type: number
     sql: ${TABLE}."L_RECEIPTDATEKEY" ;;
+    hidden: yes
   }
 
   dimension: l_returnflag {
@@ -96,6 +102,7 @@ view: f_lineitems {
     label: "Shipping Date Key"
     type: number
     sql: ${TABLE}."L_SHIPDATEKEY" ;;
+    hidden: yes
   }
 
   dimension: l_shipinstruct {
@@ -120,6 +127,7 @@ view: f_lineitems {
     label: "Supplier Key"
     type: number
     sql: ${TABLE}."L_SUPPKEY" ;;
+    hidden: yes
   }
 
   dimension: l_supplycost {
@@ -143,6 +151,7 @@ view: f_lineitems {
     label: "Primary Key"
     primary_key: yes
     sql: CONCAT(${TABLE}."L_ORDERKEY", ${TABLE}."L_LINENUMBER") ;;
+    hidden: yes
   }
 
   measure: count {
@@ -150,18 +159,34 @@ view: f_lineitems {
     drill_fields: []
   }
   measure: total_sales_price {
+    description: "Total sales from items sold"
     type: sum
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
     value_format_name: usd
   }
   measure: average_sales_price {
+    description: "Average sale price of items sold"
     type: average
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
     value_format_name: usd
   }
   measure: cumulative_total_sales {
+    description: "Cumulative total sales from items sold (also known as a running total)"
     type: running_total
     sql: ${total_sales_price} ;;
     value_format_name: usd
   }
+  measure: total_sales_price_by_air {
+    label: "Total Sales Price Shipped By Air"
+    description: "Total sales of items shipped by air"
+    type: sum
+    filters: [l_shipmode: "AIR"]
+    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
+  }
+  measure: total_russia_sales {
+    description: "Total sales by customers from Russia"
+    type: sum
+    filters: [d_customer.c_nation: "RUSSIA"]
+    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
+    }
 }
