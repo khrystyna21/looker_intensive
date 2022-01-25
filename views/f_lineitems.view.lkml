@@ -182,11 +182,13 @@ view: f_lineitems {
     type: sum
     filters: [l_shipmode: "AIR"]
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
+    value_format_name: usd
   }
   measure: total_russia_sales {
     description: "Total sales by customers from Russia"
     type: sum
     filters: [d_customer.c_nation: "RUSSIA"]
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
+    value_format_name: usd
     }
 }
