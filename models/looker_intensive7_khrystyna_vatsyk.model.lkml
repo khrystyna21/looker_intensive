@@ -45,10 +45,4 @@ explore: f_lineitems {
     sql_on: ${f_lineitems.l_suppkey} = ${d_supplier.s_suppkey} ;;
     relationship: many_to_one
   }
-
-
-
-
-
-
 }
