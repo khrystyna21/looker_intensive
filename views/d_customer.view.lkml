@@ -47,6 +47,7 @@ view: d_customer {
   }
 
   measure: count {
+    label: "Number of Customers"
     type: count
     drill_fields: [c_name]
   }

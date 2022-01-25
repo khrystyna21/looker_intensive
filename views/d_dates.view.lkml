@@ -61,9 +61,4 @@ view: d_dates {
     type: number
     sql: ${TABLE}."YEAR" ;;
   }
-
-  measure: count {
-    type: count
-    drill_fields: [month_name]
-  }
 }

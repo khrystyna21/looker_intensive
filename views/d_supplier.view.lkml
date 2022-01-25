@@ -47,6 +47,7 @@ view: d_supplier {
   }
 
   measure: count {
+    label: "Number of Suppliers"
     type: count
     drill_fields: [s_name]
   }

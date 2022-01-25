@@ -41,6 +41,7 @@ view: d_part {
   }
 
   measure: count {
+    label: "Number of Parts"
     type: count
     drill_fields: [p_name]
   }

@@ -147,6 +147,7 @@ view: f_lineitems {
     type: number
     sql: ${TABLE}."L_TOTALPRICE" ;;
   }
+
   dimension: primary_key {
     label: "Primary Key"
     primary_key: yes
@@ -154,28 +155,27 @@ view: f_lineitems {
     hidden: yes
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
   measure: total_sales_price {
     description: "Total sales from items sold"
     type: sum
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
     value_format_name: usd
   }
+
   measure: average_sales_price {
     description: "Average sale price of items sold"
     type: average
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
     value_format_name: usd
   }
+
   measure: cumulative_total_sales {
     description: "Cumulative total sales from items sold (also known as a running total)"
     type: running_total
     sql: ${total_sales_price} ;;
     value_format_name: usd
   }
+
   measure: total_sales_price_by_air {
     label: "Total Sales Price Shipped By Air"
     description: "Total sales of items shipped by air"
@@ -184,6 +184,7 @@ view: f_lineitems {
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
     value_format_name: usd
   }
+
   measure: total_russia_sales {
     description: "Total sales by customers from Russia"
     type: sum
