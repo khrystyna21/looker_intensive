@@ -151,12 +151,12 @@ view: f_lineitems {
   }
   measure: total_sales_price {
     type: sum
-    sql: ${l_totalprice} ;;
+    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
     value_format_name: usd
   }
   measure: average_sales_price {
     type: average
-    sql: ${l_totalprice} ;;
+    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
     value_format_name: usd
   }
   measure: cumulative_total_sales {
