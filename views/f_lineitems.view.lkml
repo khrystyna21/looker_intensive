@@ -191,5 +191,59 @@ view: f_lineitems {
     filters: [d_customer.c_nation: "RUSSIA"]
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
     value_format_name: usd
-    }
+  }
+
+  measure: total_gross_revenue {
+    description: "Total price of completed sales"
+    type: sum
+    sql: ${l_extendedprice} ;;
+    value_format_name: usd
+  }
+
+  measure: total_cost {
+    description: "Cost of Goods Sold"
+    type: sum
+    sql: ${l_supplycost} ;;
+    value_format_name: usd
+  }
+
+  measure: total_gross_margin_amount  {
+    description: "Total Gross Revenue - Total Cost"
+    sql: ${total_gross_revenue} - ${total_cost} ;;
+    value_format_name: usd
+  }
+
+  measure: gross_margin_percentage {
+    description: "Total Gross Margin Amount / Total Gross Revenue"
+    sql: ${total_gross_margin_amount} / ${total_gross_revenue} ;;
+    value_format_name: percent_2
+  }
+
+  measure: number_returned{
+    label: "Number of Items Returned"
+    description: "Number of items that were returned by dissatisfied customers"
+    type: count
+    filters: [l_returnflag: "R"]
+    drill_fields: [l_orderkey]
+  }
+
+  measure: number_sold {
+    label: "Total Number of Items Sold"
+    description: "Number of items that were sold"
+    type: count
+    drill_fields: [l_orderkey]
+  }
+
+  measure: item_returned_rate {
+    description: "Number of Items Returned / Total Number of Items Sold"
+    sql: ${number_returned} / ${number_sold} ;;
+    value_format_name: decimal_2
+  }
+
+  measure: avg_cust_spend {
+    label: "Average Spend per Customer"
+    description: "Total Sales Price / Total Number of Customers"
+    sql: ${total_sales_price} / count(distinct ${l_custkey}) ;;
+    value_format_name: usd
+  }
 }

@@ -46,6 +46,14 @@ view: d_supplier {
     hidden: yes
   }
 
+  dimension: balance_tier {
+    description: "Cohort of suppliers according to Account Balance"
+    type: tier
+    tiers: [1, 3001, 5001, 7001]
+    style: integer
+    sql: ${s_acctbal} ;;
+  }
+
   measure: count {
     label: "Number of Suppliers"
     type: count
