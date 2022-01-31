@@ -196,6 +196,7 @@ view: f_lineitems {
   measure: total_gross_revenue {
     description: "Total price of completed sales"
     type: sum
+    filters: [l_orderstatus: "F"]
     sql: ${l_extendedprice} ;;
     value_format_name: usd
   }
