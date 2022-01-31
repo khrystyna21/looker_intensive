@@ -180,7 +180,7 @@ view: f_lineitems {
     label: "Total Sales Price Shipped By Air"
     description: "Total sales of items shipped by air"
     type: sum
-    filters: [l_shipmode: "AIR"]
+    filters: [l_shipmode: "%AIR%"]
     sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
     value_format_name: usd
   }
