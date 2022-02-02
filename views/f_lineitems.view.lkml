@@ -254,8 +254,8 @@ view: f_lineitems {
     label: "Number of Items Returned"
     description: "Number of items that were returned by dissatisfied customers"
     type: sum
-    sql: ${l_quantity} ;;
     filters: [is_returned: "yes"]
+    sql: ${l_quantity} ;;
   }
 
   measure: number_sold {
