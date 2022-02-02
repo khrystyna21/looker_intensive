@@ -155,17 +155,47 @@ view: f_lineitems {
     hidden: yes
   }
 
+  dimension: is_returned {
+    type: yesno
+    hidden: yes
+    sql: ${l_returnflag} = 'R' ;;
+  }
+
+  dimension: is_completed {
+    type: yesno
+    hidden: yes
+    sql: ${l_orderstatus} = 'F' ;;
+  }
+
+  dimension: is_shipped_by_air {
+    type: yesno
+    hidden: yes
+    sql: ${l_shipmode} in ('AIR', 'REG AIR') ;;
+  }
+
+  dimension: sales_price {
+    description: "Price for items after taxes and discounts"
+    type: number
+    sql: ${TABLE}."L_EXTENDEDPRICE" * (1 - ${TABLE}."L_DISCOUNT") * (1 +  ${TABLE}."L_TAX") ;;
+  }
+
+  measure: count_customers {
+    type: count_distinct
+    hidden: yes
+    sql: ${l_custkey} ;;
+  }
+
   measure: total_sales_price {
     description: "Total sales from items sold"
     type: sum
-    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
+    sql: ${sales_price};;
     value_format_name: usd
   }
 
   measure: average_sales_price {
     description: "Average sale price of items sold"
     type: average
-    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount});;
+    sql: ${sales_price};;
     value_format_name: usd
   }
 
@@ -180,8 +210,8 @@ view: f_lineitems {
     label: "Total Sales Price Shipped By Air"
     description: "Total sales of items shipped by air"
     type: sum
-    filters: [l_shipmode: "%AIR%"]
-    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
+    filters: [is_shipped_by_air: "yes"]
+    sql: ${sales_price} ;;
     value_format_name: usd
   }
 
@@ -189,14 +219,14 @@ view: f_lineitems {
     description: "Total sales by customers from Russia"
     type: sum
     filters: [d_customer.c_nation: "RUSSIA"]
-    sql: ${l_extendedprice} * (1+${l_tax}) * (1-${l_discount}) ;;
+    sql: ${sales_price} ;;
     value_format_name: usd
   }
 
   measure: total_gross_revenue {
     description: "Total price of completed sales"
     type: sum
-    filters: [l_orderstatus: "F"]
+    filters: [is_completed: "yes"]
     sql: ${l_extendedprice} ;;
     value_format_name: usd
   }
@@ -216,35 +246,35 @@ view: f_lineitems {
 
   measure: gross_margin_percentage {
     description: "Total Gross Margin Amount / Total Gross Revenue"
-    sql: ${total_gross_margin_amount} / ${total_gross_revenue} ;;
+    sql: ${total_gross_margin_amount} / nullif(${total_gross_revenue}, 0) ;;
     value_format_name: percent_2
   }
 
   measure: number_returned{
     label: "Number of Items Returned"
     description: "Number of items that were returned by dissatisfied customers"
-    type: count
-    filters: [l_returnflag: "R"]
-    drill_fields: [l_orderkey]
+    type: sum
+    sql: ${l_quantity} ;;
+    filters: [is_returned: "yes"]
   }
 
   measure: number_sold {
     label: "Total Number of Items Sold"
     description: "Number of items that were sold"
-    type: count
-    drill_fields: [l_orderkey]
+    type: sum
+    sql: ${l_quantity} ;;
   }
 
   measure: item_returned_rate {
     description: "Number of Items Returned / Total Number of Items Sold"
-    sql: ${number_returned} / ${number_sold} ;;
+    sql: ${number_returned} / nullif(${number_sold}, 0) ;;
     value_format_name: decimal_2
   }
 
   measure: avg_cust_spend {
     label: "Average Spend per Customer"
     description: "Total Sales Price / Total Number of Customers"
-    sql: ${total_sales_price} / count(distinct ${l_custkey}) ;;
+    sql: ${total_sales_price} / nullif(${count_customers}, 0) ;;
     value_format_name: usd
   }
 }
