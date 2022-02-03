@@ -170,7 +170,7 @@ view: f_lineitems {
   dimension: is_russia {
     type: yesno
     hidden: yes
-    sql: ${customer_country} = "RUSSIA" ;;
+    sql: ${customer_country} = 'RUSSIA' ;;
   }
 
   dimension: is_returned {
