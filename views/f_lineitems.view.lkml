@@ -148,11 +148,29 @@ view: f_lineitems {
     sql: ${TABLE}."L_TOTALPRICE" ;;
   }
 
+  dimension: sales_price {
+    description: "Price for items after taxes and discounts"
+    type: number
+    sql: ${TABLE}."L_EXTENDEDPRICE" * (1 - ${TABLE}."L_DISCOUNT") * (1 +  ${TABLE}."L_TAX") ;;
+  }
+
   dimension: primary_key {
     label: "Primary Key"
     primary_key: yes
     sql: CONCAT(${TABLE}."L_ORDERKEY", ${TABLE}."L_LINENUMBER") ;;
     hidden: yes
+  }
+
+  dimension: customer_country {
+    type: string
+    hidden: yes
+    sql:  ${d_customer.c_nation} ;;
+  }
+
+  dimension: is_russia {
+    type: yesno
+    hidden: yes
+    sql: ${customer_country} = "RUSSIA" ;;
   }
 
   dimension: is_returned {
@@ -171,12 +189,6 @@ view: f_lineitems {
     type: yesno
     hidden: yes
     sql: ${l_shipmode} in ('AIR', 'REG AIR') ;;
-  }
-
-  dimension: sales_price {
-    description: "Price for items after taxes and discounts"
-    type: number
-    sql: ${TABLE}."L_EXTENDEDPRICE" * (1 - ${TABLE}."L_DISCOUNT") * (1 +  ${TABLE}."L_TAX") ;;
   }
 
   measure: count_customers {
@@ -218,7 +230,7 @@ view: f_lineitems {
   measure: total_russia_sales {
     description: "Total sales by customers from Russia"
     type: sum
-    filters: [d_customer.c_nation: "RUSSIA"]
+    filters: [is_russia: "yes"]
     sql: ${sales_price} ;;
     value_format_name: usd
   }
