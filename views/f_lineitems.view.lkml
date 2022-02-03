@@ -53,6 +53,11 @@ view: f_lineitems {
     hidden: yes
   }
 
+  dimension: order_date {
+    type: date
+    sql: ${d_dates.date_val_date} ;;
+  }
+
   dimension: l_orderkey {
     label: "Order Key"
     type: number
@@ -202,6 +207,7 @@ view: f_lineitems {
     type: sum
     sql: ${sales_price};;
     value_format_name: usd
+    drill_fields: [details*]
   }
 
   measure: average_sales_price {
@@ -225,6 +231,7 @@ view: f_lineitems {
     filters: [is_shipped_by_air: "yes"]
     sql: ${sales_price} ;;
     value_format_name: usd
+    drill_fields: [details*]
   }
 
   measure: total_russia_sales {
@@ -233,6 +240,7 @@ view: f_lineitems {
     filters: [is_russia: "yes"]
     sql: ${sales_price} ;;
     value_format_name: usd
+    drill_fields: [details*]
   }
 
   measure: total_gross_revenue {
@@ -241,6 +249,7 @@ view: f_lineitems {
     filters: [is_completed: "yes"]
     sql: ${l_extendedprice} ;;
     value_format_name: usd
+    drill_fields: [details*]
   }
 
   measure: total_cost {
@@ -248,12 +257,14 @@ view: f_lineitems {
     type: sum
     sql: ${l_supplycost} ;;
     value_format_name: usd
+    drill_fields: [details*]
   }
 
   measure: total_gross_margin_amount  {
     description: "Total Gross Revenue - Total Cost"
     sql: ${total_gross_revenue} - ${total_cost} ;;
     value_format_name: usd
+    drill_fields: [details*]
   }
 
   measure: gross_margin_percentage {
@@ -268,6 +279,7 @@ view: f_lineitems {
     type: sum
     filters: [is_returned: "yes"]
     sql: ${l_quantity} ;;
+    drill_fields: [details*]
   }
 
   measure: number_sold {
@@ -288,5 +300,9 @@ view: f_lineitems {
     description: "Total Sales Price / Total Number of Customers"
     sql: ${total_sales_price} / nullif(${count_customers}, 0) ;;
     value_format_name: usd
+  }
+
+  set: details {
+    fields: [d_customer.c_name, d_supplier.s_name, d_part.p_brand, d_part.p_mfgr, order_date]
   }
 }
