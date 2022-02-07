@@ -262,6 +262,7 @@ view: f_lineitems {
 
   measure: total_gross_margin_amount  {
     description: "Total Gross Revenue - Total Cost"
+    type: number
     sql: ${total_gross_revenue} - ${total_cost} ;;
     value_format_name: usd
     drill_fields: [details*]
@@ -269,7 +270,8 @@ view: f_lineitems {
 
   measure: gross_margin_percentage {
     description: "Total Gross Margin Amount / Total Gross Revenue"
-    sql: ${total_gross_margin_amount} / nullif(${total_gross_revenue}, 0) ;;
+    type: number
+    sql: ${total_gross_margin_amount} / NULLIF(${total_gross_revenue}, 0) ;;
     value_format_name: percent_2
   }
 
@@ -292,13 +294,15 @@ view: f_lineitems {
   measure: item_returned_rate {
     description: "Number of Items Returned / Total Number of Items Sold"
     sql: ${number_returned} / nullif(${number_sold}, 0) ;;
+    type: number
     value_format_name: decimal_2
   }
 
   measure: avg_cust_spend {
     label: "Average Spend per Customer"
     description: "Total Sales Price / Total Number of Customers"
-    sql: ${total_sales_price} / nullif(${count_customers}, 0) ;;
+    type: number
+    sql: ${total_sales_price} / NULLIF(${count_customers}, 0) ;;
     value_format_name: usd
   }
 
