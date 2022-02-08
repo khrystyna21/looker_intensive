@@ -18,6 +18,11 @@ view: d_supplier {
     label: "Supplier Name"
     type: string
     sql: ${TABLE}."S_NAME" ;;
+    link: {
+      label: "Supplier's Website"
+      url: "http://www.google.com/search?q={{ value }}"
+      icon_url : "http://google.com/favicon.ico"
+    }
   }
 
   dimension: s_nation {

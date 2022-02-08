@@ -202,11 +202,18 @@ view: f_lineitems {
     sql: ${l_custkey} ;;
   }
 
+  measure: count_orders {
+    label: "Number of Orders"
+    type: count_distinct
+    sql: ${l_orderkey} ;;
+  }
+
   measure: total_sales_price {
     description: "Total sales from items sold"
     type: sum
     sql: ${sales_price};;
-    value_format_name: usd
+    # value_format_name: usd
+    value_format: "$0.00,,\" M\""
     drill_fields: [details*]
   }
 
@@ -230,7 +237,8 @@ view: f_lineitems {
     type: sum
     filters: [is_shipped_by_air: "yes"]
     sql: ${sales_price} ;;
-    value_format_name: usd
+    # value_format_name: usd
+    value_format: "$0.00,,\" M\""
     drill_fields: [details*]
   }
 
@@ -239,7 +247,8 @@ view: f_lineitems {
     type: sum
     filters: [is_russia: "yes"]
     sql: ${sales_price} ;;
-    value_format_name: usd
+    # value_format_name: usd
+    value_format: "$0.00,,\" M\""
     drill_fields: [details*]
   }
 
@@ -248,15 +257,17 @@ view: f_lineitems {
     type: sum
     filters: [is_completed: "yes"]
     sql: ${l_extendedprice} ;;
-    value_format_name: usd
-    drill_fields: [details*]
+    # value_format_name: usd
+    value_format: "$0.00,,\" M\""
+    drill_fields: [part_details*]
   }
 
   measure: total_cost {
     description: "Cost of Goods Sold"
     type: sum
     sql: ${l_supplycost} ;;
-    value_format_name: usd
+    # value_format_name: usd
+    value_format: "$0.00,,\" M\""
     drill_fields: [details*]
   }
 
@@ -264,8 +275,9 @@ view: f_lineitems {
     description: "Total Gross Revenue - Total Cost"
     type: number
     sql: ${total_gross_revenue} - ${total_cost} ;;
-    value_format_name: usd
-    drill_fields: [details*]
+    # value_format_name: usd
+    value_format: "$0.00,,\" M\""
+    drill_fields: [supp_details*]
   }
 
   measure: gross_margin_percentage {
@@ -308,5 +320,13 @@ view: f_lineitems {
 
   set: details {
     fields: [d_customer.c_name, d_supplier.s_name, d_part.p_brand, d_part.p_mfgr, order_date]
+  }
+
+  set: supp_details {
+    fields: [d_supplier.s_name, d_supplier.s_nation, d_supplier.s_region, d_supplier.s_acctbal, d_supplier.balance_tier]
+  }
+
+  set: part_details {
+    fields: [d_part.p_name, d_part.p_brand, d_part.p_mfgr]
   }
 }
