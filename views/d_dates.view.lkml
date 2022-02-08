@@ -26,6 +26,12 @@ view: d_dates {
     hidden: yes
   }
 
+  dimension: day_number {
+    label: "Day"
+    type: number
+    sql: day(${date_val_raw}) ;;
+  }
+
   dimension: day_of_week {
     label: "Day of the Week"
     type: number
